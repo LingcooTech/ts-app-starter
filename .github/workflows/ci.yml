@@ -49,8 +49,11 @@ jobs:
           node-version: 24
       - run: corepack enable
       - run: corepack pnpm install --frozen-lockfile
+      - run: corepack pnpm check:toolchain
       - run: pnpm db:migrate
       - name: Verify migration idempotency
         run: pnpm db:migrate
+      - run: corepack pnpm smoke:generated
+      - run: corepack pnpm check:boundaries
       - run: pnpm check
       - run: corepack pnpm audit --prod --audit-level high

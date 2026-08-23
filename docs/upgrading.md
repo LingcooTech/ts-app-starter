@@ -27,3 +27,22 @@
 跨越大版本时，优先逐项迁移基础设施，而不是覆盖应用目录。对于规模较小的应用，也可以用新的 Starter 创建临时项目，再迁移业务模块和数据库变更。无论采用哪种方式，都要保留应用自己的提交历史和回滚路径。
 
 未来只有当迁移步骤足够稳定、重复执行成本足够高时，才考虑提供专用 codemod 或 `upgrade` CLI；在此之前，明确的 diff 和人工验收更安全。
+
+## 版本对应关系
+
+Starter 的版本由三个位置共同声明：
+
+- 根目录 `.starter-version`；
+- 根 `package.json` 的 `version`；
+- `create-ts-app-starter/package.json` 的 `templateVersion`。
+
+CI 会执行 `pnpm check:starter-version`，三者不一致时拒绝合并。CLI 自身的 npm patch 修复可以单独发布，但它的 `templateVersion` 必须指向它生成的模板版本。
+
+每次修改生成模板后，应至少执行：
+
+```bash
+pnpm check:starter-version
+pnpm check:toolchain
+pnpm smoke:generated
+pnpm smoke:docker
+```

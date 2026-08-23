@@ -1,34 +1,26 @@
 # Lingcoo TS App Starter
 
-一个建立在成熟 TypeScript Web 技术栈之上的、可直接开发和部署完整业务应用的起始工程。
+一个建立在成熟 TypeScript Web 技术栈之上的标准应用起步工程。
 
 语言 / Language: 中文 · [English](README.en.md)
 
 Starter 的版本只代表创建基线。应用创建后独立维护；需要吸收后续基础设施改进时，请参阅[升级指南](docs/upgrading.md)。
 
+Starter 的长期定位和“优秀轻量级标准起步工程”的验收标准见[质量标准](docs/quality-bar.md)。
+
 ## 1. 项目定位
 
 Node.js + TypeScript 是当前主流 Web 和业务应用开发中成熟、现代且广泛采用的技术组合之一。只要应用的核心业务是“接收请求 → 处理业务逻辑 → 查询数据库或外部 API → 返回结果”，Node.js + TypeScript 通常都是非常合适的技术路线。
 
-TS App Starter 在这条成熟技术路线之上，把后端、前端、数据库、工程结构、Docker 和 CI/CD 组合成一套可以直接开发、构建和部署的完整应用基础。
+TS App Starter 只提供运行环境、基础工程结构、数据库连接边界、前端空壳、Docker 和 CI/CD。它不提供任何业务、领域、产品或第三方平台能力。
 
-它的目标很明确：为有真实业务流程的应用提供一个成熟、清晰、可部署的起点。
+它的目标很明确：让一个新的 TypeScript Web 应用从零开始时，立即拥有可开发、可测试、可构建、可部署的工程基础。
 
-## 2. 它最适合开发什么？
+## 2. 它提供什么？
 
-它最适合有用户端、有管理后台、有 API、有数据库，并围绕明确业务流程持续开发的完整业务应用。
+默认提供 API、Worker、Admin、Web、PostgreSQL、Drizzle、Docker、Compose、Caddy、CI 和项目生成 CLI。业务项目在创建后自行决定是否添加认证、缓存、队列、存储、支付、邮件或其他基础设施。
 
-用户端可以是 Web、小程序、App、H5 或其他终端；管理后台用于工作人员、商家、机构或企业内部管理；API 负责业务能力和数据访问；数据库保存核心业务数据。
-
-### 行业应用
-
-围绕一个行业的完整业务流程构建系统，例如教培、零售、门店、物业、物流、企业服务等。这类应用通常需要把多个业务环节放在同一个系统中协同运行。
-
-### 垂直领域应用
-
-围绕一个明确业务领域深入开发，例如 CRM、预约、会员、订单、内容、售后、工单、项目或订阅管理。它们不一定属于某一个行业，也可以服务多个行业。
-
-TS App Starter 不追求覆盖所有软件形态。对于只有几个页面的简单网站，它可能偏重；对于需要复杂分布式基础设施的超大型系统，也需要进一步设计。它专注的是最常见的完整业务应用。
+Starter 不追求覆盖所有软件形态。它适合需要标准 Node.js API、数据库和工程交付流程的 Web 应用；简单静态网站或复杂分布式系统可以选择更轻或更专门的方案。
 
 ## 3. 为什么要使用它？
 
@@ -38,7 +30,7 @@ TS App Starter 不追求覆盖所有软件形态。对于只有几个页面的�
 
 清晰的技术组合、架构设计和工程基础，是任何项目的必要基础，也是决定一个产品能否长期维护和使用的关键。设计完成后，深入论证和完整测试同样不可缺少。
 
-TS App Starter 把这些基础工作预先完成。新项目可以直接建立在这套已经完成架构设计、技术选型和工程化配置的基础上，把主要精力放到业务本身。
+TS App Starter 把这些非业务基础工作预先完成。新项目可以直接建立在这套架构、技术选型和工程化配置之上，再自行设计业务领域。
 
 ## 4. 为什么值得信任？
 
@@ -48,30 +40,26 @@ TS App Starter 把这些基础工作预先完成。新项目可以直接建立�
 
 TS App Starter 重点解决的是选型、组合、规范和工程化：HTTP、后端模块、数据库、前端、容器和 CI/CD 分别交给成熟技术负责，再把它们组织成一套完整应用。
 
-| 层级      | 技术                   | 主要作用                              |
-| --------- | ---------------------- | ------------------------------------- |
-| 语言      | TypeScript             | 统一前后端开发语言和类型系统          |
-| 运行环境  | Node.js                | 运行 API、Worker 和服务端工具         |
-| 后端架构  | NestJS                 | 组织模块、依赖、业务代码和测试        |
-| HTTP      | Fastify                | 处理 HTTP 请求和响应                  |
-| 数据库    | PostgreSQL             | 保存核心业务数据                      |
-| 数据访问  | Drizzle ORM            | 以 TypeScript 管理数据库访问和 Schema |
-| 数据校验  | Zod / JSON Schema      | 校验配置和接口数据                    |
-| 前端      | React + Vite / Next.js | 构建管理后台和 Web 用户端             |
-| Workspace | pnpm                   | 管理依赖和多工程 Workspace            |
-| 应用交付  | Docker                 | 构建可重复部署的运行镜像              |
-| CI/CD     | GitHub Actions         | 自动检查、测试、构建和发布            |
+| 层级      | 技术              | 主要作用                              |
+| --------- | ----------------- | ------------------------------------- |
+| 语言      | TypeScript        | 统一前后端开发语言和类型系统          |
+| 运行环境  | Node.js           | 运行 API、Worker 和服务端工具         |
+| 后端架构  | NestJS            | 组织模块、依赖、业务代码和测试        |
+| HTTP      | Fastify           | 处理 HTTP 请求和响应                  |
+| 数据库    | PostgreSQL        | 保存核心业务数据                      |
+| 数据访问  | Drizzle ORM       | 以 TypeScript 管理数据库访问和 Schema |
+| 数据校验  | Zod / JSON Schema | 校验配置和接口数据                    |
+| 前端      | React + Vite      | 构建空白管理后台和 Web 入口           |
+| Workspace | pnpm              | 管理依赖和多工程 Workspace            |
+| 应用交付  | Docker            | 构建可重复部署的运行镜像              |
+| CI/CD     | GitHub Actions    | 自动检查、测试、构建和发布            |
 
 ### 成熟的应用架构
 
-后端默认采用模块化单体：一个应用保持整体部署简单，内部按业务模块划分边界。随着业务增长，可以增加 Worker、Redis、队列、对象存储或独立服务，而不需要一开始就引入微服务复杂度。
+后端默认采用模块化单体：一个应用保持整体部署简单，内部按业务模块划分边界。业务项目可以在创建后自行增加 Worker 任务、缓存、队列、对象存储或独立服务。
 
     server/src/modules/
-    ├── users/
-    ├── customers/
-    ├── products/
-    ├── orders/
-    └── payments/
+    └── <business-module>/
 
 ### 成熟的工程交付方式
 
@@ -106,7 +94,7 @@ TS App Starter 默认采用尽可能简单的运行结构，不要求 Kubernetes
     TS App Starter
     ├── Frontend
     │   ├── Admin       React + Vite
-    │   └── Web         React + Vite / Next.js
+    │   └── Web         React + Vite
     ├── Server
     │   ├── API         NestJS + Fastify
     │   └── Worker      NestJS Application Context
@@ -117,7 +105,7 @@ TS App Starter 默认采用尽可能简单的运行结构，不要求 Kubernetes
         ├── Docker / Docker Compose
         └── GitHub Actions
 
-Admin 和 Web 是默认的两个前端入口；实际业务也可以由小程序、App 或其他终端通过 API 接入。Server 中 API 负责实时请求，Worker 负责异步任务和后台工作。
+Admin 和 Web 是默认的两个空白前端入口；其他终端可以在业务项目中通过 API 接入。Server 中 API 负责实时请求，Worker 只提供通用的独立运行入口，不预置队列或业务任务。
 
 ## 6. Repository 结构
 
@@ -137,7 +125,7 @@ Admin 和 Web 是默认的两个前端入口；实际业务也可以由小程序
     │   └── test/
     ├── admin/                   # React + Vite 管理后台
     ├── web/                     # React + Vite 公共 Web
-    ├── packages/                # 项目内部共享包，按需使用
+    ├── packages/                # 应用内部共享包，按需使用，不预置内容
     ├── docker/                  # Caddy / Docker 配置
     ├── deploy/                  # 部署脚本和环境模板
     ├── .github/workflows/       # CI / Build / Publish / Deploy
@@ -147,7 +135,7 @@ Admin 和 Web 是默认的两个前端入口；实际业务也可以由小程序
     ├── pnpm-workspace.yaml
     └── package.json
 
-新业务优先作为 NestJS Module 加入 server，而不是先抽成独立 package。只有真正需要被多个工程共享、并且边界已经稳定的代码，才进入 packages/。
+新业务优先作为 NestJS Module 加入 server，而不是先抽成独立 package。`packages/` 只是当前应用仓库内部可选的 workspace package 目录，不是 `@lingcoo-tech/*` 公共 package 的存放位置。只有真正需要被当前应用的多个工作区项目共享、并且边界已经稳定的代码，才进入 packages/。没有真实共享需求时，保持目录为空即可。
 
 ## 7. 如何使用它开发一个新应用？
 
@@ -265,7 +253,7 @@ CLI 创建的项目已经是独立 Git 仓库。创建一个自己的 GitHub 空
 
 ## 10. 一句话概括
 
-TS App Starter 是一套建立在成熟 TypeScript Web 技术栈之上的、可直接开发和部署完整业务应用的起始工程。
+TS App Starter 是一套建立在成熟 TypeScript Web 技术栈之上的标准应用起步工程，不包含业务和产品能力。
 
 ## 许可证
 

@@ -7,6 +7,7 @@ import { basename, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { pipeline } from 'node:stream/promises';
 import { Readable } from 'node:stream';
+import { fileURLToPath } from 'node:url';
 
 const DEFAULT_REPOSITORY = 'LingcooTech/ts-app-starter';
 const DOWNLOAD_TIMEOUT_MS = 30_000;
@@ -41,6 +42,7 @@ Options:
   --skip-install            Do not install dependencies
   --no-git                  Do not initialize a Git repository
   --ref <branch-or-tag>     Template branch or tag (default: main)
+  --template-path <path>    Use a local template directory (maintainer smoke tests)
   --help                    Show this help
 `);
 }
@@ -50,6 +52,7 @@ function parseArgs(args) {
     packageManager: 'pnpm',
     example: 'minimal',
     ref: 'main',
+    templatePath: undefined,
     git: true,
     install: true,
   };
@@ -65,12 +68,18 @@ function parseArgs(args) {
       options.git = false;
       continue;
     }
-    if (arg === '--example' || arg === '--package-manager' || arg === '--ref') {
+    if (
+      arg === '--example' ||
+      arg === '--package-manager' ||
+      arg === '--ref' ||
+      arg === '--template-path'
+    ) {
       const value = args[++index];
       if (!value) throw new Error(`${arg} requires a value`);
       if (arg === '--example') options.example = value;
       if (arg === '--package-manager') options.packageManager = value;
       if (arg === '--ref') options.ref = value;
+      if (arg === '--template-path') options.templatePath = resolve(value);
       continue;
     }
     if (arg.startsWith('-')) throw new Error(`Unknown option: ${arg}`);
@@ -133,10 +142,18 @@ async function downloadTemplate(workdir, ref) {
   );
 }
 
+async function resolveTemplate(workdir, options) {
+  if (options.templatePath) return resolve(options.templatePath);
+  return downloadTemplate(workdir, options.ref);
+}
+
 async function copyTemplate(source, target) {
   await mkdir(target, { recursive: true });
-  for (const entry of await readdir(source))
+  const excludedEntries = new Set(['.git', 'node_modules', 'dist', 'coverage']);
+  for (const entry of await readdir(source)) {
+    if (excludedEntries.has(entry)) continue;
     await cp(join(source, entry), join(target, entry), { recursive: true, force: true });
+  }
   await rm(join(target, '.git'), { recursive: true, force: true });
   await rm(join(target, 'create-ts-app-starter'), { recursive: true, force: true });
   await rm(join(target, 'node_modules'), { recursive: true, force: true });
@@ -168,6 +185,22 @@ async function transformFiles(root, projectName) {
   }
 }
 
+async function removeMaintainerOnlyFiles(root) {
+  const packagePath = join(root, 'package.json');
+  const packageJson = JSON.parse(await readFile(packagePath, 'utf8'));
+
+  delete packageJson.scripts['check:starter-version'];
+  delete packageJson.scripts['smoke:generated'];
+  packageJson.scripts.check = packageJson.scripts.check.replace(
+    'corepack pnpm check:starter-version && ',
+    '',
+  );
+  await writeFile(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`, 'utf8');
+
+  await rm(join(root, 'scripts/check-starter-version.mjs'), { force: true });
+  await rm(join(root, 'scripts/verify-generated-project.mjs'), { force: true });
+}
+
 function commandFor(manager) {
   return manager === 'pnpm' ? ['corepack', ['pnpm', 'install']] : [manager, ['install']];
 }
@@ -184,9 +217,10 @@ async function main() {
   const workdir = await mkdtemp(join(tmpdir(), 'create-ts-app-starter-'));
   try {
     console.log(`Creating a TypeScript application in ${target}`);
-    const source = await downloadTemplate(workdir, parsed.options.ref);
+    const source = await resolveTemplate(workdir, parsed.options);
     await copyTemplate(source, target);
     await transformFiles(target, basename(target));
+    await removeMaintainerOnlyFiles(target);
     if (parsed.options.git) {
       execFileSync('git', ['init', '-b', 'main'], { cwd: target, stdio: 'ignore' });
       execFileSync('git', ['add', '.'], { cwd: target });
@@ -210,7 +244,11 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error(`\nError: ${error.message}`);
-  process.exitCode = 1;
-});
+export { copyTemplate, main, parseArgs, removeMaintainerOnlyFiles, transformFiles };
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    console.error(`\nError: ${error.message}`);
+    process.exitCode = 1;
+  });
+}

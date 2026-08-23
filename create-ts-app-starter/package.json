@@ -1,8 +1,13 @@
 {
   "name": "@lingcoo-tech/create-ts-app-starter",
   "version": "0.1.1",
+  "templateVersion": "0.1.0",
   "description": "Create a production-ready TypeScript application from the ts-app-starter template.",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "type": "module",
   "scripts": {
     "check": "node --check cli.mjs"

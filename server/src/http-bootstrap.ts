@@ -9,6 +9,8 @@ import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 
+import { ApiErrorFilter } from './common/http/api-error.filter';
+
 function corsOrigins(value: string): string[] {
   return value
     .split(',')
@@ -23,6 +25,7 @@ export async function configureHttpApplication(app: NestFastifyApplication): Pro
   const webRoot = resolve(workspaceRoot, 'web/dist');
 
   app.enableShutdownHooks();
+  app.useGlobalFilters(new ApiErrorFilter());
   app.setGlobalPrefix('api', {
     exclude: [
       { path: 'health/live', method: RequestMethod.GET },

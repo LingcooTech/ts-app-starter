@@ -1,6 +1,6 @@
 # Lingcoo TS App Starter
 
-A production-ready starting point for building, shipping, and deploying complete business applications on a mature TypeScript web stack.
+A standard application foundation built on a mature TypeScript web stack.
 
 Language: [中文](README.md) · English
 
@@ -10,25 +10,15 @@ Starter versions identify the creation baseline only. After creation, each appli
 
 Node.js + TypeScript remains one of the most modern, mature, and widely adopted combinations for web and business application development. Whenever the core business flow is “receive a request → process business logic → query a database or external API → return a result,” Node.js + TypeScript is usually a strong technology choice.
 
-TS App Starter combines that proven technology path with a backend, frontend, database, engineering structure, Docker, and CI/CD into a complete foundation that can be developed, built, and deployed directly.
+TS App Starter provides only the runtime, engineering structure, database boundary, empty frontend shells, Docker, and CI/CD. It contains no business domain, product workflow, or vendor-specific platform capability.
 
-Its goal is simple: provide a mature, clear, and deployable starting point for applications with real business workflows.
+Its goal is simple: give a new TypeScript web application a development, testing, build, and deployment foundation from day one.
 
-## 2. What is it best suited for?
+## 2. What does it provide?
 
-It is designed for complete business applications with a user-facing client, an administration console, APIs, a database, and a clear business process that will evolve over time.
+It provides an API, Worker, Admin, Web, PostgreSQL, Drizzle, Docker, Compose, Caddy, CI, and a project generator. After creation, each application decides whether it needs authentication, caching, queues, storage, payments, email, or other infrastructure.
 
-The client may be a web application, mini program, mobile app, H5 application, or another terminal. The administration console serves staff, merchants, institutions, or internal business teams. APIs provide business capabilities and data access, while PostgreSQL stores core business data.
-
-### Industry applications
-
-Build complete workflows for industries such as education and training, retail, stores, property management, logistics, and enterprise services. These applications usually coordinate multiple business processes in one system.
-
-### Vertical applications
-
-Build deeply around a defined business domain such as CRM, booking, membership, orders, content, after-sales, tickets, projects, or subscriptions. These applications do not have to belong to one industry and can serve multiple industries.
-
-TS App Starter does not try to cover every software shape. It may be too heavy for a website with only a few pages, while a very large system with complex distributed infrastructure will need additional design. It focuses on the most common complete business applications.
+It does not try to cover every software shape. It is intended for applications that need a standard Node.js API, database boundary, and delivery workflow; simple static sites or complex distributed systems may need a different foundation.
 
 ## 3. Why use it?
 
@@ -38,7 +28,7 @@ Technology selection, architecture, and engineering governance are especially im
 
 A clear technology combination, architecture, and engineering foundation are essential to every project and strongly influence whether a product can be maintained over the long term. Careful reasoning and complete testing remain necessary after the design is complete.
 
-TS App Starter prepares these foundations in advance, allowing a new project to focus its main effort on the business itself.
+TS App Starter prepares these non-business foundations in advance, allowing each new project to design its own domain without inheriting product assumptions.
 
 ## 4. Why trust it?
 
@@ -48,30 +38,26 @@ Business applications are built on a mainstream, mature TypeScript web ecosystem
 
 TS App Starter focuses on selection, composition, conventions, and engineering: mature technologies handle HTTP, backend modules, databases, frontend applications, containers, and CI/CD, while the starter organizes them into one coherent application.
 
-| Layer                | Technology             | Main responsibility                                       |
-| -------------------- | ---------------------- | --------------------------------------------------------- |
-| Language             | TypeScript             | One language and type system across frontend and backend  |
-| Runtime              | Node.js                | Runs the API, Worker, and server-side tools               |
-| Backend architecture | NestJS                 | Organizes modules, dependencies, business code, and tests |
-| HTTP                 | Fastify                | Handles HTTP requests and responses                       |
-| Database             | PostgreSQL             | Stores core business data                                 |
-| Data access          | Drizzle ORM            | Manages database access and schemas with TypeScript       |
-| Validation           | Zod / JSON Schema      | Validates configuration and API data                      |
-| Frontend             | React + Vite / Next.js | Builds administration and user-facing applications        |
-| Workspace            | pnpm                   | Manages dependencies and the multi-project workspace      |
-| Delivery             | Docker                 | Builds reproducible runtime images                        |
-| CI/CD                | GitHub Actions         | Automates checks, tests, builds, and publishing           |
+| Layer                | Technology        | Main responsibility                                       |
+| -------------------- | ----------------- | --------------------------------------------------------- |
+| Language             | TypeScript        | One language and type system across frontend and backend  |
+| Runtime              | Node.js           | Runs the API, Worker, and server-side tools               |
+| Backend architecture | NestJS            | Organizes modules, dependencies, business code, and tests |
+| HTTP                 | Fastify           | Handles HTTP requests and responses                       |
+| Database             | PostgreSQL        | Stores core business data                                 |
+| Data access          | Drizzle ORM       | Manages database access and schemas with TypeScript       |
+| Validation           | Zod / JSON Schema | Validates configuration and API data                      |
+| Frontend             | React + Vite      | Provides empty administration and web entry points        |
+| Workspace            | pnpm              | Manages dependencies and the multi-project workspace      |
+| Delivery             | Docker            | Builds reproducible runtime images                        |
+| CI/CD                | GitHub Actions    | Automates checks, tests, builds, and publishing           |
 
 ### A proven application architecture
 
-The backend uses a modular monolith by default: the application remains simple to deploy while internal boundaries are organized by business module. As the product grows, Worker processes, Redis, queues, object storage, or independent services can be added without introducing microservice complexity on day one.
+The backend uses a modular monolith by default: the application remains simple to deploy while internal boundaries are organized by business module. Each application can add Worker jobs, caching, queues, object storage, or independent services when needed.
 
     server/src/modules/
-    ├── users/
-    ├── customers/
-    ├── products/
-    ├── orders/
-    └── payments/
+    └── <business-module>/
 
 ### A reliable delivery model
 
@@ -106,7 +92,7 @@ In a measurement of the blank starter on a server with 2 CPU cores and 3.6 GB RA
     TS App Starter
     ├── Frontend
     │   ├── Admin       React + Vite
-    │   └── Web         React + Vite / Next.js
+    │   └── Web         React + Vite
     ├── Server
     │   ├── API         NestJS + Fastify
     │   └── Worker      NestJS Application Context
@@ -117,7 +103,7 @@ In a measurement of the blank starter on a server with 2 CPU cores and 3.6 GB RA
         ├── Docker / Docker Compose
         └── GitHub Actions
 
-Admin and Web are the two default frontend entry points. A mini program, mobile app, or another terminal can also consume the API. The API handles real-time requests, while the Worker handles asynchronous jobs and background work.
+Admin and Web are the two default empty frontend entry points. A mini program, mobile app, or another terminal can also consume the API. The API handles real-time requests, while the Worker provides only a generic standalone process entry point.
 
 ## 6. Repository structure
 
